@@ -96,7 +96,14 @@ html{min-height:100%;}body{min-height:100vh;background:#d7dafa url('assets/fond-
 #sideFavorites .nav-art{width:27px;height:27px;flex:0 0 27px;object-fit:contain}
 #settingsBtn .nav-art{width:22px;height:22px;flex:0 0 22px;object-fit:contain}
 @media(max-width:780px){#sideFavorites .nav-art{width:20px;height:20px;flex-basis:20px}}
-</style></head><body><div class="app"><aside class="sidebar"><div class="sidebar-top">SONO<span>POP</span></div><button id="sideBoard" class="sidebtn active">▦ &nbsp; Soundboard</button><button id="sideEdit" class="sidebtn">✎ &nbsp; Édition</button><button id="sideCategories" class="sidebtn">▣ &nbsp; Catégories</button><button id="sideFavorites" class="sidebtn"><img src="assets/sonopop-favorite.svg" class="nav-art" alt=""> &nbsp; Mes favoris</button><button id="sideHelp" class="sidebtn">ⓘ &nbsp; Aide</button><div class="side-decoration">▂▅▃▇▅▂▆▃▅▂</div></aside><div class="workspace">
+</style><style id="sonopop-nav-custom-icons-v10">
+#sideBoard,#sideEdit,#sideCategories,#sideFavorites{display:flex;align-items:center;gap:10px;text-align:left}
+#sideBoard .nav-art,#sideEdit .nav-art,#sideCategories .nav-art,#sideFavorites .nav-art{width:28px;height:28px;flex:0 0 28px;object-fit:contain;display:block}
+@media(max-width:780px){
+#sideBoard,#sideEdit,#sideCategories,#sideFavorites{gap:6px}
+#sideBoard .nav-art,#sideEdit .nav-art,#sideCategories .nav-art,#sideFavorites .nav-art{width:22px;height:22px;flex:0 0 22px}
+}
+</style></head><body><div class="app"><aside class="sidebar"><div class="sidebar-top">SONO<span>POP</span></div><button id="sideBoard" class="sidebtn active"><img src="assets/menu-soundboard.svg" class="nav-art" alt=""> Soundboard</button><button id="sideEdit" class="sidebtn"><img src="assets/menu-edition.svg" class="nav-art" alt=""> Édition</button><button id="sideCategories" class="sidebtn"><img src="assets/menu-categories.svg" class="nav-art" alt=""> Catégories</button><button id="sideFavorites" class="sidebtn"><img src="assets/sonopop-favorite.svg" class="nav-art" alt=""> &nbsp; Mes favoris</button><button id="sideHelp" class="sidebtn">ⓘ &nbsp; Aide</button><div class="side-decoration">▂▅▃▇▅▂▆▃▅▂</div></aside><div class="workspace">
 <header class="top"><div><div class="brand">SONO<span>POP</span></div><div class="sub">BY BROT2YOU</div></div><div class="actions"><button class="btn" id="importBtn">📥 Importer</button><button class="btn" id="exportBtn">📤 Exporter</button><button class="btn" id="settingsBtn"><img src="assets/sonopop-settings.svg" class="nav-art" alt=""> Réglages</button><button class="btn" id="fullBtn">⛶ Plein écran</button><button class="btn primary" id="modeBtn">✏️ Mode édition</button></div></header>
 <section class="hero"><img src="assets/logo.webp" alt="SONOPOP by BROT2YOU" class="hero-logo"></section>
 <nav class="tabs" id="tabs" aria-label="Catégories"></nav>
