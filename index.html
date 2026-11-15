@@ -86,6 +86,11 @@ html{min-height:100%;}body{min-height:100vh;background:#d7dafa url('assets/fond-
 .icon-choice:hover,.icon-choice:focus-visible{border-color:#b17eff;background:#f0eaff}
 .icon-choice img{width:41px;height:41px;object-fit:contain}
 .icon-choice span{max-width:100%;overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
+</style><style id="sonopop-local-gallery-v9">
+.sonopop-local-gallery{grid-template-columns:repeat(auto-fill,minmax(88px,1fr));max-height:330px;gap:9px}
+.sonopop-local-gallery .icon-choice{padding:9px 5px;min-height:95px}
+.sonopop-local-gallery .icon-choice img{width:60px;height:60px}
+.sonopop-local-gallery .icon-choice span{font-size:10px;font-weight:750;text-align:center}
 </style></head><body><div class="app"><aside class="sidebar"><div class="sidebar-top">SONO<span>POP</span></div><button id="sideBoard" class="sidebtn active">▦ &nbsp; Soundboard</button><button id="sideEdit" class="sidebtn">✎ &nbsp; Édition</button><button id="sideCategories" class="sidebtn">▣ &nbsp; Catégories</button><button id="sideFavorites" class="sidebtn">★ &nbsp; Mes favoris</button><button id="sideHelp" class="sidebtn">ⓘ &nbsp; Aide</button><div class="side-decoration">▂▅▃▇▅▂▆▃▅▂</div></aside><div class="workspace">
 <header class="top"><div><div class="brand">SONO<span>POP</span></div><div class="sub">BY BROT2YOU</div></div><div class="actions"><button class="btn" id="importBtn">📥 Importer</button><button class="btn" id="exportBtn">📤 Exporter</button><button class="btn" id="settingsBtn">⚙️ Réglages</button><button class="btn" id="fullBtn">⛶ Plein écran</button><button class="btn primary" id="modeBtn">✏️ Mode édition</button></div></header>
 <section class="hero"><img src="assets/logo.webp" alt="SONOPOP by BROT2YOU" class="hero-logo"></section>
@@ -93,7 +98,7 @@ html{min-height:100%;}body{min-height:100vh;background:#d7dafa url('assets/fond-
 <div class="toolbar"><div><strong id="catTitle"></strong><div class="muted" id="catCount"></div></div><div class="controls"><label for="cols">Colonnes</label><select id="cols"><option>2</option><option>3</option><option>4</option><option>5</option><option selected>6</option><option>8</option></select><label for="limit">Boutons affichés</label><input id="limit" type="number" min="1" max="100" value="12"><label title="Autoriser plusieurs sons en même temps"><input type="checkbox" id="mix"> Sons simultanés</label><button class="btn" id="stopBtn">⏹ Stop</button><button class="btn hidden" id="addPadBtn">＋ Ajouter un son</button></div></div>
 <main id="grid" class="grid"></main><div class="footer">SONOPOP • by BROT2YOU • Données conservées sur cet appareil • Fonctionne hors ligne</div></div></div>
 <input class="hidden" type="file" accept=".json,application/json" id="importFile"><div id="modalRoot"></div><div id="toast" class="toast hidden" role="status"></div>
-<script>
+<script src="assets/sonopop-illustrations-bundle.js"></script><script>
 'use strict';
 const DB='soundpop-v1', STORE='state', KEY='main';
 const colors=['#ff88ad','#ffbc64','#ffd879','#9f8cf9','#91c8ff','#7edbd1','#b5e981','#d4a8fa'];
@@ -186,7 +191,26 @@ $('#padImage').onchange=async e=>{let f=e.target.files[0];if(!f)return;if(!['ima
 $('#padAudio').onchange=async e=>{let f=e.target.files[0];if(!f)return;if(!f.type.startsWith('audio/')&&!/\.(mp3|wav|ogg|m4a)$/i.test(f.name))return toast('Fichier audio invalide');draft.audio=await fileData(f);$('#audioStatus').textContent=f.name};
 $('#clearImage').onclick=()=>{draft.image='';draft.iconMode='none';draft.presetIcon='';$('#padImage').value='';$('#imageStatus').textContent='Aucune illustration : bouton vierge';$('#iconPicker').classList.add('hidden')};
 $('#useEmoji').onclick=()=>{draft.image='';draft.iconMode='emoji';draft.presetIcon='';$('#padImage').value='';$('#imageStatus').textContent='Emoji sélectionné';$('#iconPicker').classList.add('hidden')};
-$('#usePreset').onclick=()=>{const panel=$('#iconPicker');panel.classList.remove('hidden');panel.innerHTML='<b>Illustrations SONOPOP disponibles sur cet appareil</b><div class="icon-results">'+[['bell','🔔 Cloche'],['clap','👏 Applaudissements'],['drum','🥁 Batterie']].map(([key,name])=>'<button class="icon-choice" type="button" data-preset="'+key+'"><img src="assets/icon-'+key+'.webp" alt=""><span>'+name+'</span></button>').join('')+'</div>';panel.querySelectorAll('[data-preset]').forEach(b=>b.onclick=()=>{draft.image='';draft.iconMode='preset';draft.presetIcon=b.dataset.preset;$('#padImage').value='';$('#imageStatus').textContent='Icône SONOPOP sélectionnée : '+b.textContent.trim();panel.classList.add('hidden')})};
+$('#usePreset').onclick=()=>{
+ const panel=$('#iconPicker');panel.classList.remove('hidden');
+ const builtin=[['bell','🔔 Cloche'],['clap','👏 Applaudissements'],['drum','🥁 Batterie']];
+ const extra=(window.SONOPOP_ILLUSTRATIONS||[]);
+ panel.innerHTML='<b>Bibliothèque SONOPOP — '+(builtin.length+extra.length)+' illustrations</b><p class="muted">Choisis un visuel pour ce bouton. Il sera conservé dans la sauvegarde JSON.</p><div class="icon-results sonopop-local-gallery">'+
+ builtin.map(([key,name])=>'<button class="icon-choice" type="button" data-preset="'+key+'"><img src="assets/icon-'+key+'.webp" alt=""><span>'+name+'</span></button>').join('')+
+ extra.map(item=>'<button class="icon-choice" type="button" data-local-icon="'+item.id+'"><img src="'+item.src+'" alt=""><span>'+esc(item.name)+'</span></button>').join('')+
+ '</div>';
+ panel.querySelectorAll('[data-preset]').forEach(b=>b.onclick=()=>{
+   draft.image='';draft.iconMode='preset';draft.presetIcon=b.dataset.preset;
+   $('#padImage').value='';$('#imageStatus').textContent='Icône SONOPOP sélectionnée : '+b.textContent.trim();
+   panel.classList.add('hidden');toast('Illustration choisie : clique sur Enregistrer');
+ });
+ panel.querySelectorAll('[data-local-icon]').forEach(b=>b.onclick=()=>{
+   const item=extra.find(x=>x.id===b.dataset.localIcon);if(!item)return;
+   draft.image=item.src;draft.iconMode='custom';draft.presetIcon='';
+   $('#padImage').value='';$('#imageStatus').textContent='Illustration SONOPOP sélectionnée : '+item.name;
+   panel.classList.add('hidden');toast('Illustration choisie : clique sur Enregistrer');
+ });
+};
 $('#findIcon').onclick=()=>{const panel=$('#iconPicker');panel.classList.remove('hidden');panel.innerHTML='<b>Rechercher des icônes libres (Iconify / Material Design)</b><p class="muted">Recherche en ligne, en français ou en anglais. L’icône choisie est enregistrée dans ta sauvegarde.</p><div class="icon-searchline"><input id="iconQuery" type="search" placeholder="Ex. cloche, bell, chat, applause" autocomplete="off"><button type="button" class="btn primary" id="iconSearch">Rechercher</button></div><div id="iconResults" class="icon-results"><span class="muted">Saisis un mot pour afficher les icônes.</span></div><p class="muted">Icônes : Material Design Icons (Apache 2.0), via Iconify.</p>';let timer;const input=$('#iconQuery');input.value=draft.name||'';$('#iconSearch').onclick=()=>searchIcons(input.value,draft);input.oninput=()=>{clearTimeout(timer);timer=setTimeout(()=>searchIcons(input.value,draft),420)};searchIcons(input.value,draft)};
 $('#clearAudio').onclick=()=>{draft.audio='';$('#audioStatus').textContent='Aucun son'};
 $('#savePad').onclick=()=>{draft.name=$('#padName').value.trim();draft.emoji=$('#padEmoji').value.trim()||'🔊';draft.favorite=$('#padFavorite').checked;draft.template=0;if(!draft.name)return toast('Donne un nom au bouton');if(old)Object.assign(old,draft);else c.pads.push(draft);save();closeModal();render();toast('Bouton enregistré !')};
