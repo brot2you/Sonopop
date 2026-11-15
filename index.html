@@ -53,6 +53,28 @@ html{min-height:100%;}body{min-height:100vh;background:#d7dafa url('assets/fond-
 }
 .pad.playing .art,.pad.playing strong{z-index:1}
 @media(prefers-reduced-motion:reduce){.pad.playing{transition:none!important}}
+</style><style id="sonopop-v7-icon-and-caption-fit">
+/* Place icons and labels inside the safe central face of the rounded background. */
+.pad .art{
+  left:29%!important;top:26%!important;
+  width:42%!important;height:33%!important;
+  font-size:clamp(22px,2.8vw,43px)!important;
+}
+.pad .art img{object-fit:contain!important}
+.pad strong,.pad strong.long-label{
+  left:18%!important;bottom:27%!important;
+  width:64%!important;max-width:64%!important;
+  max-height:2.35em!important;
+  line-height:1.16!important;
+}
+@media(max-width:900px){
+ .pad .art{left:29%!important;top:27%!important;width:42%!important;height:32%!important;font-size:clamp(22px,3.3vw,37px)!important}
+ .pad strong,.pad strong.long-label{bottom:27%!important}
+}
+@media(max-width:560px){
+ .pad .art{left:30%!important;top:27%!important;width:40%!important;height:31%!important;font-size:clamp(20px,5.3vw,31px)!important}
+ .pad strong,.pad strong.long-label{bottom:26%!important}
+}
 </style></head><body><div class="app"><aside class="sidebar"><div class="sidebar-top">SONO<span>POP</span></div><button id="sideBoard" class="sidebtn active">▦ &nbsp; Soundboard</button><button id="sideEdit" class="sidebtn">✎ &nbsp; Édition</button><button id="sideCategories" class="sidebtn">▣ &nbsp; Catégories</button><button id="sideFavorites" class="sidebtn">★ &nbsp; Mes favoris</button><button id="sideHelp" class="sidebtn">ⓘ &nbsp; Aide</button><div class="side-decoration">▂▅▃▇▅▂▆▃▅▂</div></aside><div class="workspace">
 <header class="top"><div><div class="brand">SONO<span>POP</span></div><div class="sub">BY BROT2YOU</div></div><div class="actions"><button class="btn" id="importBtn">📥 Importer</button><button class="btn" id="exportBtn">📤 Exporter</button><button class="btn" id="settingsBtn">⚙️ Réglages</button><button class="btn" id="fullBtn">⛶ Plein écran</button><button class="btn primary" id="modeBtn">✏️ Mode édition</button></div></header>
 <section class="hero"><img src="assets/logo.webp" alt="SONOPOP by BROT2YOU" class="hero-logo"></section>
