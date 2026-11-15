@@ -110,7 +110,7 @@ html{min-height:100%;}body{min-height:100vh;background:#d7dafa url('assets/fond-
 <div class="toolbar"><div><strong id="catTitle"></strong><div class="muted" id="catCount"></div></div><div class="controls"><label for="cols">Colonnes</label><select id="cols"><option>2</option><option>3</option><option>4</option><option>5</option><option selected>6</option><option>8</option></select><label for="limit">Boutons affichés</label><input id="limit" type="number" min="1" max="100" value="12"><label title="Autoriser plusieurs sons en même temps"><input type="checkbox" id="mix"> Sons simultanés</label><button class="btn" id="stopBtn">⏹ Stop</button><button class="btn hidden" id="addPadBtn">＋ Ajouter un son</button></div></div>
 <main id="grid" class="grid"></main><div class="footer">SONOPOP • by BROT2YOU • Données conservées sur cet appareil • Fonctionne hors ligne</div></div></div>
 <input class="hidden" type="file" accept=".json,application/json" id="importFile"><div id="modalRoot"></div><div id="toast" class="toast hidden" role="status"></div>
-<script src="assets/sonopop-illustrations-bundle.js"></script><script>
+<script src="assets/sonopop-illustrations-bundle.js"></script><script src="assets/sonopop-new-icons.js"></script><script>
 'use strict';
 const DB='soundpop-v1', STORE='state', KEY='main';
 const colors=['#ff88ad','#ffbc64','#ffd879','#9f8cf9','#91c8ff','#7edbd1','#b5e981','#d4a8fa'];
@@ -206,7 +206,7 @@ $('#useEmoji').onclick=()=>{draft.image='';draft.iconMode='emoji';draft.presetIc
 $('#usePreset').onclick=()=>{
  const panel=$('#iconPicker');panel.classList.remove('hidden');
  const builtin=[['bell','🔔 Cloche'],['clap','👏 Applaudissements'],['drum','🥁 Batterie']];
- const extra=(window.SONOPOP_ILLUSTRATIONS||[]);
+ const extra=[...(window.SONOPOP_ILLUSTRATIONS||[]),...(window.SONOPOP_NEW_ICONS||[])];
  panel.innerHTML='<b>Bibliothèque SONOPOP — '+(builtin.length+extra.length+4)+' illustrations</b><p class="muted">Choisis un visuel pour ce bouton. Il sera conservé dans la sauvegarde JSON.</p><div class="icon-results sonopop-local-gallery">'+
  builtin.map(([key,name])=>'<button class="icon-choice" type="button" data-preset="'+key+'"><img src="assets/icon-'+key+'.webp" alt=""><span>'+name+'</span></button>').join('')+
  extra.map(item=>'<button class="icon-choice" type="button" data-local-icon="'+item.id+'"><img src="'+item.src+'" alt=""><span>'+esc(item.name)+'</span></button>').join('')+'<button class="icon-choice" type="button" id="pickWrestler"><img src="assets/icon-wrestler.svg" alt=""><span>Catcheur</span></button><button class="icon-choice" type="button" data-extra-svg="answer-correct"><img src="assets/icon-answer-correct.svg" alt=""><span>Bonne réponse</span></button><button class="icon-choice" type="button" data-extra-svg="answer-wrong"><img src="assets/icon-answer-wrong.svg" alt=""><span>Mauvaise réponse</span></button><button class="icon-choice" type="button" data-extra-svg="birthday"><img src="assets/icon-birthday.svg" alt=""><span>Happy Birthday</span></button>'+
