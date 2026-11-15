@@ -91,8 +91,13 @@ html{min-height:100%;}body{min-height:100vh;background:#d7dafa url('assets/fond-
 .sonopop-local-gallery .icon-choice{padding:9px 5px;min-height:95px}
 .sonopop-local-gallery .icon-choice img{width:60px;height:60px}
 .sonopop-local-gallery .icon-choice span{font-size:10px;font-weight:750;text-align:center}
-</style></head><body><div class="app"><aside class="sidebar"><div class="sidebar-top">SONO<span>POP</span></div><button id="sideBoard" class="sidebtn active">▦ &nbsp; Soundboard</button><button id="sideEdit" class="sidebtn">✎ &nbsp; Édition</button><button id="sideCategories" class="sidebtn">▣ &nbsp; Catégories</button><button id="sideFavorites" class="sidebtn">★ &nbsp; Mes favoris</button><button id="sideHelp" class="sidebtn">ⓘ &nbsp; Aide</button><div class="side-decoration">▂▅▃▇▅▂▆▃▅▂</div></aside><div class="workspace">
-<header class="top"><div><div class="brand">SONO<span>POP</span></div><div class="sub">BY BROT2YOU</div></div><div class="actions"><button class="btn" id="importBtn">📥 Importer</button><button class="btn" id="exportBtn">📤 Exporter</button><button class="btn" id="settingsBtn">⚙️ Réglages</button><button class="btn" id="fullBtn">⛶ Plein écran</button><button class="btn primary" id="modeBtn">✏️ Mode édition</button></div></header>
+</style><style id="sonopop-custom-nav-art-v9">
+#sideFavorites,#settingsBtn{display:inline-flex;align-items:center;gap:7px}
+#sideFavorites .nav-art{width:27px;height:27px;flex:0 0 27px;object-fit:contain}
+#settingsBtn .nav-art{width:22px;height:22px;flex:0 0 22px;object-fit:contain}
+@media(max-width:780px){#sideFavorites .nav-art{width:20px;height:20px;flex-basis:20px}}
+</style></head><body><div class="app"><aside class="sidebar"><div class="sidebar-top">SONO<span>POP</span></div><button id="sideBoard" class="sidebtn active">▦ &nbsp; Soundboard</button><button id="sideEdit" class="sidebtn">✎ &nbsp; Édition</button><button id="sideCategories" class="sidebtn">▣ &nbsp; Catégories</button><button id="sideFavorites" class="sidebtn"><img src="assets/sonopop-favorite.svg" class="nav-art" alt=""> &nbsp; Mes favoris</button><button id="sideHelp" class="sidebtn">ⓘ &nbsp; Aide</button><div class="side-decoration">▂▅▃▇▅▂▆▃▅▂</div></aside><div class="workspace">
+<header class="top"><div><div class="brand">SONO<span>POP</span></div><div class="sub">BY BROT2YOU</div></div><div class="actions"><button class="btn" id="importBtn">📥 Importer</button><button class="btn" id="exportBtn">📤 Exporter</button><button class="btn" id="settingsBtn"><img src="assets/sonopop-settings.svg" class="nav-art" alt=""> Réglages</button><button class="btn" id="fullBtn">⛶ Plein écran</button><button class="btn primary" id="modeBtn">✏️ Mode édition</button></div></header>
 <section class="hero"><img src="assets/logo.webp" alt="SONOPOP by BROT2YOU" class="hero-logo"></section>
 <nav class="tabs" id="tabs" aria-label="Catégories"></nav>
 <div class="toolbar"><div><strong id="catTitle"></strong><div class="muted" id="catCount"></div></div><div class="controls"><label for="cols">Colonnes</label><select id="cols"><option>2</option><option>3</option><option>4</option><option>5</option><option selected>6</option><option>8</option></select><label for="limit">Boutons affichés</label><input id="limit" type="number" min="1" max="100" value="12"><label title="Autoriser plusieurs sons en même temps"><input type="checkbox" id="mix"> Sons simultanés</label><button class="btn" id="stopBtn">⏹ Stop</button><button class="btn hidden" id="addPadBtn">＋ Ajouter un son</button></div></div>
@@ -195,16 +200,25 @@ $('#usePreset').onclick=()=>{
  const panel=$('#iconPicker');panel.classList.remove('hidden');
  const builtin=[['bell','🔔 Cloche'],['clap','👏 Applaudissements'],['drum','🥁 Batterie']];
  const extra=(window.SONOPOP_ILLUSTRATIONS||[]);
- panel.innerHTML='<b>Bibliothèque SONOPOP — '+(builtin.length+extra.length)+' illustrations</b><p class="muted">Choisis un visuel pour ce bouton. Il sera conservé dans la sauvegarde JSON.</p><div class="icon-results sonopop-local-gallery">'+
+ panel.innerHTML='<b>Bibliothèque SONOPOP — '+(builtin.length+extra.length+1)+' illustrations</b><p class="muted">Choisis un visuel pour ce bouton. Il sera conservé dans la sauvegarde JSON.</p><div class="icon-results sonopop-local-gallery">'+
  builtin.map(([key,name])=>'<button class="icon-choice" type="button" data-preset="'+key+'"><img src="assets/icon-'+key+'.webp" alt=""><span>'+name+'</span></button>').join('')+
- extra.map(item=>'<button class="icon-choice" type="button" data-local-icon="'+item.id+'"><img src="'+item.src+'" alt=""><span>'+esc(item.name)+'</span></button>').join('')+
+ extra.map(item=>'<button class="icon-choice" type="button" data-local-icon="'+item.id+'"><img src="'+item.src+'" alt=""><span>'+esc(item.name)+'</span></button>').join('')+'<button class="icon-choice" type="button" id="pickWrestler"><img src="assets/icon-wrestler.svg" alt=""><span>Catcheur</span></button>'+
  '</div>';
  panel.querySelectorAll('[data-preset]').forEach(b=>b.onclick=()=>{
    draft.image='';draft.iconMode='preset';draft.presetIcon=b.dataset.preset;
    $('#padImage').value='';$('#imageStatus').textContent='Icône SONOPOP sélectionnée : '+b.textContent.trim();
    panel.classList.add('hidden');toast('Illustration choisie : clique sur Enregistrer');
  });
- panel.querySelectorAll('[data-local-icon]').forEach(b=>b.onclick=()=>{
+ $('#pickWrestler').onclick=async()=>{try{
+ const response=await fetch('assets/icon-wrestler.svg');if(!response.ok)throw Error('Image non trouvée');
+ const svg=await response.text();
+ draft.image='data:image/svg+xml;charset=utf-8,'+encodeURIComponent(svg);
+ draft.iconMode='custom';draft.presetIcon='';$('#padImage').value='';
+ $('#imageStatus').textContent='Illustration SONOPOP sélectionnée : Catcheur';
+ panel.classList.add('hidden');toast('Catcheur sélectionné : clique sur Enregistrer');
+ }catch(e){toast('Impossible de charger le catcheur : '+e.message)}
+};
+panel.querySelectorAll('[data-local-icon]').forEach(b=>b.onclick=()=>{
    const item=extra.find(x=>x.id===b.dataset.localIcon);if(!item)return;
    draft.image=item.src;draft.iconMode='custom';draft.presetIcon='';
    $('#padImage').value='';$('#imageStatus').textContent='Illustration SONOPOP sélectionnée : '+item.name;
